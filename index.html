@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>POARUS_009 | VIP Cyberpunk Bio Profile</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Inter, Orbitron & Share Tech Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            gaming: ['Orbitron', 'sans-serif'],
+            mono: ['Share Tech Mono', 'monospace'],
+          },
+          colors: {
+            accentCyan: '#00f2fe',
+            accentPurple: '#a855f7',
+            accentRed: '#ff2a5f',
+            accentGreen: '#00ff66',
+            zaloBlue: '#0088FF',
+            telegramBlue: '#2AABEE',
+            cyberYellow: '#ffe600',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #05040a;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      perspective: 1000px;
+    }
+
+    /* Scanlines FX */
+    .scanlines {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+      );
+      background-size: 100% 4px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* GLITCH TEXT EFFECT */
+    .glitch-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch-text {
+      position: relative;
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.8), 0 0 20px rgba(168, 85, 247, 0.6);
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    .glitch-text::before {
+      left: 2px;
+      text-shadow: -2px 0 #ff2a5f;
+      animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+    }
+
+    .glitch-text::after {
+      left: -2px;
+      text-shadow: -2px 0 #00f2fe;
+      animation: glitch-anim-2 2s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim-1 {
+      0% { clip: rect(20px, 9999px, 15px, 0); }
+      20% { clip: rect(42px, 9999px, 78px, 0); }
+      40% { clip: rect(12px, 9999px, 35px, 0); }
+      60% { clip: rect(65px, 9999px, 89px, 0); }
+      80% { clip: rect(5px, 9999px, 50px, 0); }
+      100% { clip: rect(30px, 9999px, 10px, 0); }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% { clip: rect(60px, 9999px, 10px, 0); }
+      25% { clip: rect(10px, 9999px, 60px, 0); }
+      50% { clip: rect(85px, 9999px, 20px, 0); }
+      75% { clip: rect(35px, 9999px, 90px, 0); }
+      100% { clip: rect(50px, 9999px, 4px, 0); }
+    }
+
+    /* 3D GLASS CARD & TILT */
+    .tilt-card {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+    }
+
+    /* ROTATING RGB RUNNING BEAM BORDER */
+    .border-runner-card {
+      position: relative;
+      background: rgba(12, 10, 22, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .border-runner-card::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
+      background: conic-gradient(
+        transparent 0deg,
+        transparent 270deg,
+        var(--border-glow-color, #00f2fe) 320deg,
+        var(--border-glow-color-secondary, #a855f7) 360deg
+      );
+      animation: rotate-border 3.5s linear infinite;
+      z-index: 0;
+      opacity: 0.75;
+      transition: opacity 0.3s ease;
+    }
+
+    .border-runner-card:hover::before {
+      opacity: 1;
+      animation-duration: 2s;
+    }
+
+    .border-runner-card::after {
+      content: '';
+      position: absolute;
+      inset: 1.5px;
+      background: rgba(14, 12, 26, 0.94);
+      border-radius: 14.5px;
+      z-index: 1;
+      transition: background 0.3s ease;
+    }
+
+    .border-runner-card:hover::after {
+      background: rgba(22, 18, 42, 0.96);
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      transform: translateZ(25px);
+    }
+
+    @keyframes rotate-border {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* COLOR THEMES FOR BEAM BORDERS */
+    .border-cyan {
+      --border-glow-color: #00f2fe;
+      --border-glow-color-secondary: #00ff66;
+    }
+    .border-purple {
+      --border-glow-color: #a855f7;
+      --border-glow-color-secondary: #00f2fe;
+    }
+    .border-red {
+      --border-glow-color: #ff2a5f;
+      --border-glow-color-secondary: #ffe600;
+    }
+    .border-zalo {
+      --border-glow-color: #0088FF;
+      --border-glow-color-secondary: #00f2fe;
+    }
+    .border-telegram {
+      --border-glow-color: #2AABEE;
+      --border-glow-color-secondary: #00ff66;
+    }
+
+    .border-cyan:hover { box-shadow: 0 0 30px rgba(0, 242, 254, 0.35), inset 0 0 15px rgba(0, 242, 254, 0.15); }
+    .border-purple:hover { box-shadow: 0 0 30px rgba(168, 85, 247, 0.35), inset 0 0 15px rgba(168, 85, 247, 0.15); }
+    .border-red:hover { box-shadow: 0 0 30px rgba(255, 42, 95, 0.35), inset 0 0 15px rgba(255, 42, 95, 0.15); }
+    .border-zalo:hover { box-shadow: 0 0 30px rgba(0, 136, 255, 0.35), inset 0 0 15px rgba(0, 136, 255, 0.15); }
+    .border-telegram:hover { box-shadow: 0 0 30px rgba(42, 171, 238, 0.35), inset 0 0 15px rgba(42, 171, 238, 0.15); }
+
+    /* AVATAR ROTATING AURA */
+    .avatar-aura {
+      position: relative;
+    }
+    .avatar-aura::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 9999px;
+      background: linear-gradient(45deg, #00f2fe, #a855f7, #ff2a5f, #00ff66);
+      background-size: 300% 300%;
+      animation: auraGradient 4s ease infinite;
+      z-index: 0;
+      filter: blur(6px);
+    }
+    @keyframes auraGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* TOAST NOTIFICATION STYLING */
+    #toast {
+      visibility: hidden;
+      min-width: 280px;
+      background: rgba(16, 12, 32, 0.95);
+      color: #fff;
+      text-align: center;
+      border-radius: 12px;
+      padding: 14px 22px;
+      position: fixed;
+      z-index: 99;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      bottom: 30px;
+      border: 1px solid rgba(0, 242, 254, 0.5);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 242, 254, 0.3);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    #toast.show {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* AUDIO PROMPT BANNER */
+    #audio-prompt {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      background: rgba(0, 242, 254, 0.15);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 9999px;
+      padding: 6px 18px;
+      font-size: 11px;
+      color: #00f2fe;
+      animation: pulseBanner 2s infinite;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    @keyframes pulseBanner {
+      0%, 100% { opacity: 0.9; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.5; transform: translateX(-50%) scale(0.97); }
+    }
+
+    #music-toggle-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 95;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(14, 12, 26, 0.9);
+      border: 1px solid rgba(0, 242, 254, 0.5);
+      color: #00f2fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #music-toggle-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
+    }
+  </style>
+</head>
+
+<body class="flex flex-col items-center justify-start min-h-screen py-8 px-4 select-none relative">
+
+  <!-- Scanlines Effect Overlay -->
+  <div class="scanlines"></div>
+
+  <!-- Interactive 3D Cyber Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div id="audio-prompt" class="font-mono flex items-center gap-2">
+    <i class="fa-solid fa-volume-high animate-bounce"></i>
+    <span>#arus</span>
+  </div>
+
+  <button id="music-toggle-btn" onclick="toggleAudio()" title="Bật/Tắt Nhạc Nền">
+    <i id="music-icon" class="fa-solid fa-music"></i>
+  </button>
+
+  <div class="w-full max-w-md flex flex-col gap-5 relative z-10 my-auto">
+
+    <!-- HEADER PROFILE CARD -->
+    <div class="tilt-card border-runner-card border-purple p-6 text-center shadow-2xl">
+      <div class="card-content flex flex-col items-center">
+        
+        <!-- Avatar with Glowing Aura -->
+        <div class="avatar-aura mb-4 relative inline-block">
+          <img 
+            src="https://cdn.corenexis.com/f/8ZB26u2dYPV.png" 
+            alt="POARUS_009 Avatar" 
+            class="relative z-10 w-28 h-28 rounded-full object-cover border-2 border-white/30 shadow-2xl"
+            onerror="this.src='https://placehold.co/200x200/1e1b4b/00f2fe?text=POARUS_009'"
+          />
+          <span class="absolute bottom-1 right-1 z-20 w-5 h-5 bg-accentGreen border-2 border-slate-950 rounded-full shadow-lg shadow-emerald-500/80 animate-pulse" title="Online"></span>
+        </div>
+
+        <!-- Glitch Username & Tagline -->
+        <div class="glitch-wrapper mb-1">
+          <h1 class="glitch-text font-gaming font-black text-3xl uppercase tracking-wider" data-text="POARUS_009">
+            POARUS_009
+          </h1>
+        </div>
+
+        <p class="text-xs font-mono font-bold tracking-widest text-accentCyan uppercase mt-1">
+          Gaming Creator & Streamer
+        </p>
+
+        <!-- VIP VERIFIED BADGE -->
+        <div class="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/40 text-cyberYellow text-[10px] font-gaming font-bold tracking-widest">
+          <i class="fa-solid fa-shield-halved text-xs"></i>
+          <span>VERIFIED VIP CREATOR</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3 mt-1">
+      <div class="flex items-center gap-2 text-accentCyan font-gaming text-xs tracking-widest uppercase font-bold px-1">
+        <i class="fa-solid fa-satellite-dish"></i>
+        <span>/// SOCIAL MEDIA</span>
+        <div class="h-[1px] bg-gradient-to-r from-accentCyan/50 to-transparent flex-grow ml-1"></div>
+      </div>
+
+      <!-- TikTok Channel -->
+      <a href="https://tiktok.com/@poarus009" target="_blank" rel="noopener noreferrer" 
+         onclick="handleCardInteraction(event, 'Đang chuyển đến kênh TikTok...')" 
+         class="tilt-card border-runner-card border-cyan p-4">
+        <div class="card-content flex items-center justify-between">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-xl bg-black/80 flex items-center justify-center text-2xl text-white border border-white/20 shadow-inner">
+              <i class="fa-brands fa-tiktok"></i>
+            </div>
+            <div>
+              <h3 class="font-gaming font-bold text-base text-white tracking-wide">TikTok Channel</h3>
+              <p class="text-xs font-mono text-gray-400">Highlights & Funny Moments</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-[9px] font-gaming font-bold bg-cyan-500/20 text-accentCyan px-2.5 py-1 rounded-md border border-cyan-500/30 tracking-wider">
+              MAIN
+            </span>
+            <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400">
+              <i class="fa-solid fa-chevron-right text-xs"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Email Contact (1-Click Copy) -->
+      <div onclick="copyEmail(event, 'vutienduy214@gmail.com')" 
+           class="tilt-card border-runner-card border-purple p-4">
+        <div class="card-content flex items-center justify-between">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-xl bg-purple-950/70 flex items-center justify-center text-xl text-purple-400 border border-purple-500/30">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <h3 class="font-gaming font-bold text-base text-white tracking-wide">Email Contact</h3>
+              <p class="text-xs font-mono text-gray-400">vutienduy214@gmail.com</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-[9px] font-gaming font-bold bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-md border border-purple-500/30 tracking-wider">
+              SAO CHÉP
+            </span>
+            <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400">
+              <i class="fa-solid fa-copy text-xs"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- YouTube & Discord -->
+      <div class="grid grid-cols-2 gap-3">
+        <!-- YouTube -->
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" 
+           onclick="handleCardInteraction(event, 'Đang mở kênh YouTube...')" 
+           class="tilt-card border-runner-card border-red p-4 text-center">
+          <div class="card-content flex flex-col items-center">
+            <div class="text-3xl text-red-500 mb-1.5 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+              <i class="fa-brands fa-youtube"></i>
+            </div>
+            <h4 class="font-gaming font-bold text-sm text-white tracking-wide">YOUTUBE</h4>
+            <p class="text-[10px] font-mono text-gray-400 mt-0.5">Subscribe For Me</p>
+          </div>
+        </a>
+
+        <!-- Discord -->
+        <a href="https://discord.gg/Wgta7ryh" target="_blank" rel="noopener noreferrer" 
+           onclick="handleCardInteraction(event, 'Đang kết nối Server Discord...')" 
+           class="tilt-card border-runner-card border-purple p-4 text-center relative">
+          <div class="card-content flex flex-col items-center">
+            <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-accentGreen rounded-full shadow-md shadow-emerald-500/80"></span>
+            <div class="text-3xl text-indigo-400 mb-1.5 drop-shadow-[0_0_10px_rgba(129,140,248,0.5)]">
+              <i class="fa-brands fa-discord"></i>
+            </div>
+            <h4 class="font-gaming font-bold text-sm text-white tracking-wide">DISCORD</h4>
+            <p class="text-[10px] font-mono text-gray-400 mt-0.5">Join Server</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3 mt-1">
+      <div class="flex items-center gap-2 text-accentPurple font-gaming text-xs tracking-widest uppercase font-bold px-1">
+        <i class="fa-solid fa-headset"></i>
+        <span>/// CONTACT & DIRECT</span>
+        <div class="h-[1px] bg-gradient-to-r from-accentPurple/50 to-transparent flex-grow ml-1"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Zalo -->
+        <a href="https://zalo.me/0926562432" target="_blank" rel="noopener noreferrer" 
+           onclick="handleCardInteraction(event, 'Mở nhắn tin Zalo...')" 
+           class="tilt-card border-runner-card border-zalo p-4 text-center">
+          <div class="card-content flex flex-col items-center">
+            <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-400/40 flex items-center justify-center text-zaloBlue text-xl mb-1.5">
+              <i class="fa-solid fa-comment-dots"></i>
+            </div>
+            <h4 class="font-gaming font-bold text-sm text-white tracking-wide">ZALO</h4>
+            <p class="text-[10px] font-mono text-gray-400 mt-0.5">Chat Trực Tiếp</p>
+          </div>
+        </a>
+
+        <!-- Telegram -->
+        <a href="https://t.me/poarus009" target="_blank" rel="noopener noreferrer" 
+           onclick="handleCardInteraction(event, 'Đang kết nối Telegram...')" 
+           class="tilt-card border-runner-card border-telegram p-4 text-center">
+          <div class="card-content flex flex-col items-center">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-telegramBlue text-xl mb-1.5">
+              <i class="fa-brands fa-telegram"></i>
+            </div>
+            <h4 class="font-gaming font-bold text-sm text-white tracking-wide">TELEGRAM</h4>
+            <p class="text-[10px] font-mono text-gray-400 mt-0.5">Kênh / Direct Chat</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3 mt-1">
+      <div class="flex items-center gap-2 text-accentRed font-gaming text-xs tracking-widest uppercase font-bold px-1">
+        <i class="fa-solid fa-gamepad"></i>
+        <span>/// GAME ZONE</span>
+        <div class="h-[1px] bg-gradient-to-r from-accentRed/50 to-transparent flex-grow ml-1"></div>
+      </div>
+
+      <!-- File Magic Body Card -->
+      <a href="https://link4m.net/hxTIQh" target="_blank" rel="noopener noreferrer" 
+         onclick="handleCardInteraction(event, 'Đang mở File Magic Body...')" 
+         class="tilt-card border-runner-card border-red p-4">
+        <div class="card-content flex items-center justify-between">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-xl bg-red-950/70 border border-red-500/40 flex items-center justify-center text-2xl text-accentRed">
+              <i class="fa-solid fa-v text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-gaming font-bold text-base text-white tracking-wide">FILE MAGIC BODY</h3>
+              <p class="text-xs font-mono text-gray-400">Exclusive Game Config File</p>
+            </div>
+          </div>
+
+          <div class="pr-2 text-accentRed animate-pulse">
+            <i class="fa-solid fa-crosshairs text-xl"></i>
+          </div>
+        </div>
+      </a>
+
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Roblox 3105-2.0 IPA -->
+        <a href="https://www.mediafire.com/file/54qs6gwcgy0ig8o/3105-2.0-unsigned.ipa/file" target="_blank" rel="noopener noreferrer" 
+           onclick="handleCardInteraction(event, 'Tải file 3105-2.0...')" 
+           class="tilt-card border-runner-card border-cyan p-4 text-center">
+          <div class="card-content flex flex-col items-center">
+            <div class="text-2xl text-gray-200 mb-1.5">
+              <i class="fa-solid fa-cube"></i>
+            </div>
+            <h4 class="font-gaming font-bold text-xs text-white tracking-wide">3105-2.0 IPA</h4>
+            <p class="text-[10px] font-mono text-gray-400 mt-0.5">Mediafire Direct Link</p>
+          </div>
+        </a>
+
+        <!-- ZingSpeed -->
+        <a href="#zingspeed" onclick="handleCardInteraction(event, 'Đang khởi chạy ZingSpeed...')" 
+           class="tilt-card border-runner-card border-purple p-4 text-center">
+          <div class="card-content flex flex-col items-center">
+            <div class="w-9 h-9 rounded-xl overflow-hidden border border-white/20 mb-1.5">
+              <img 
+                src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&q=80&w=100&h=100" 
+                alt="ZingSpeed Icon"
+                class="w-full h-full object-cover"
+                onerror="this.src='https://placehold.co/100x100/3b0764/ffffff?text=ZS'"
+              />
+            </div>
+            <h4 class="font-gaming font-bold text-xs text-white tracking-wide">ZINGSPEED</h4>
+            <p class="text-[10px] font-mono text-gray-400 mt-0.5">Speed Racing Club</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- FOOTER COPYRIGHT -->
+    <div class="text-center mt-4 mb-2 opacity-60">
+      <p class="font-mono text-[11px] text-gray-400 tracking-widest">
+        © 2026 POARUS_009 /// ALL RIGHTS RESERVED
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast">
+    <div class="flex items-center gap-2.5 justify-center">
+      <i class="fa-solid fa-circle-check text-accentCyan text-lg"></i>
+      <span id="toast-message" class="text-xs font-gaming tracking-wide">SYSTEM OK</span>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. BACKGROUND MUSIC & WEB AUDIO API INTERACTIVE SOUNDS
+       ========================================================================== */
+    const musicUrl = 'https://mp3tourl.com/audio/1790614022928-dd7b452f-4475-4588-8cf0-05b431431ae5.mp3';
+
+    let bgAudio = new Audio(musicUrl);
+    bgAudio.loop = true;
+    bgAudio.volume = 0.5;
+
+    let audioCtx = null;
+    let isAudioInitialized = false;
+    let isPlaying = false;
+
+    function initWebAudio() {
+      if (isAudioInitialized) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        bgAudio.play().then(() => {
+          isPlaying = true;
+          updateMusicIcon();
+        }).catch(err => {
+          console.warn("Autoplay audio blocked or error:", err);
+        });
+
+        isAudioInitialized = true;
+        const promptEl = document.getElementById('audio-prompt');
+        if (promptEl) {
+          promptEl.style.opacity = '0';
+          setTimeout(() => promptEl.remove(), 500);
+        }
+      } catch (e) {
+        console.warn('Web Audio API not supported:', e);
+      }
+    }
+
+    function toggleAudio() {
+      if (!isAudioInitialized) {
+        initWebAudio();
+        return;
+      }
+      if (isPlaying) {
+        bgAudio.pause();
+        isPlaying = false;
+      } else {
+        bgAudio.play();
+        isPlaying = true;
+      }
+      updateMusicIcon();
+    }
+
+    function updateMusicIcon() {
+      const icon = document.getElementById('music-icon');
+      if (icon) {
+        if (isPlaying) {
+          icon.className = 'fa-solid fa-compact-disc animate-spin';
+        } else {
+          icon.className = 'fa-solid fa-music';
+        }
+      }
+    }
+
+    // Synthwave Laser Sound Effect
+    function playSynthBeep(freq = 600, duration = 0.08, type = 'sine') {
+      if (!audioCtx) return;
+      try {
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.4, audioCtx.currentTime + duration);
+
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    window.addEventListener('click', initWebAudio, { once: true });
+    window.addEventListener('touchstart', initWebAudio, { once: true });
+
+    /* ==========================================================================
+       2. 3D PARALLAX TILT EFFECT FOR ALL CARDS
+       ========================================================================== */
+    const tiltCards = document.querySelectorAll('.tilt-card');
+
+    tiltCards.forEach(card => {
+      card.addEventListener('mouseenter', () => playSynthBeep(880, 0.06, 'triangle'));
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -12;
+        const rotateY = ((x - centerX) / centerX) * 12;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+
+      card.addEventListener('touchstart', () => {
+        playSynthBeep(950, 0.08, 'square');
+        card.style.transform = 'perspective(1000px) scale3d(0.98, 0.98, 0.98)';
+      });
+      card.addEventListener('touchend', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+
+    /* ==========================================================================
+       3. TOAST NOTIFICATIONS & COPY TO CLIPBOARD
+       ========================================================================== */
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toast-message");
+      
+      toastMsg.innerText = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    function handleCardInteraction(event, message) {
+      playSynthBeep(1200, 0.1, 'sawtooth');
+      showToast(message);
+    }
+
+    function copyEmail(event, emailText) {
+      event.preventDefault();
+      playSynthBeep(1400, 0.12, 'sine');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(emailText).then(() => {
+          showToast("Đã sao chép Email: " + emailText);
+        }).catch(() => {
+          fallbackCopyText(emailText);
+        });
+      } else {
+        fallbackCopyText(emailText);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const tempInput = document.createElement("input");
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      showToast("Đã sao chép Email: " + text);
+    }
+
+    /* ==========================================================================
+       4. 3D CANVAS NEON PARTICLES & CYBER GRID BACKGROUND ENGINE
+       ========================================================================== */
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.z = Math.random() * width;
+        this.size = Math.random() * 2 + 1;
+        this.color = ['#00f2fe', '#a855f7', '#ff2a5f', '#00ff66'][Math.floor(Math.random() * 4)];
+        this.speedX = (Math.random() - 0.5) * 0.8;
+        this.speedY = (Math.random() - 0.5) * 0.8;
+        this.speedZ = Math.random() * 1.5 + 0.5;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.z -= this.speedZ;
+
+        if (this.z <= 0 || this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+          this.reset();
+          this.z = width;
+        }
+      }
+
+      draw() {
+        const k = 256 / this.z;
+        const px = (this.x - width / 2) * k + width / 2;
+        const py = (this.y - height / 2) * k + height / 2;
+        const pSize = Math.max(0.1, this.size * k);
+
+        if (px >= 0 && px <= width && py >= 0 && py <= height) {
+          ctx.beginPath();
+          ctx.arc(px, py, pSize, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
+    }
+
+    class ShootingStar {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * (height / 2);
+        this.length = Math.random() * 80 + 40;
+        this.speed = Math.random() * 10 + 6;
+        this.size = Math.random() * 1.5 + 0.5;
+        this.color = Math.random() > 0.5 ? '#00f2fe' : '#a855f7';
+        this.active = false;
+      }
+
+      trigger() {
+        if (!this.active && Math.random() < 0.015) {
+          this.reset();
+          this.active = true;
+        }
+      }
+
+      update() {
+        if (!this.active) {
+          this.trigger();
+          return;
+        }
+
+        this.x += this.speed;
+        this.y += this.speed * 0.6;
+
+        if (this.x > width || this.y > height) {
+          this.active = false;
+        }
+      }
+
+      draw() {
+        if (!this.active) return;
+
+        ctx.beginPath();
+        const gradient = ctx.createLinearGradient(
+          this.x, this.y, 
+          this.x - this.length, this.y - this.length * 0.6
+        );
+        gradient.addColorStop(0, this.color);
+        gradient.addColorStop(1, 'transparent');
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = this.size;
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x - this.length, this.y - this.length * 0.6);
+        ctx.stroke();
+      }
+    }
+
+    let gridOffset = 0;
+    function drawCyberGrid() {
+      ctx.strokeStyle = 'rgba(168, 85, 247, 0.12)';
+      ctx.lineWidth = 1;
+
+      gridOffset = (gridOffset + 0.5) % 40;
+
+      const horizonY = height * 0.65;
+      const centerX = width / 2;
+
+      for (let x = -width; x < width * 2; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, height);
+        ctx.lineTo(centerX + (x - centerX) * 0.1, horizonY);
+        ctx.stroke();
+      }
+
+      for (let y = horizonY; y < height; y += 15) {
+        const lineY = y + gridOffset * ((y - horizonY) / (height - horizonY));
+        if (lineY < height) {
+          ctx.beginPath();
+          ctx.moveTo(0, lineY);
+          ctx.lineTo(width, lineY);
+          ctx.stroke();
+        }
+      }
+    }
+
+    const particles = Array.from({ length: 120 }, () => new Particle());
+    const shootingStars = Array.from({ length: 3 }, () => new ShootingStar());
+
+    function animateCanvas() {
+      ctx.clearRect(0, 0, width, height);
+
+      drawCyberGrid();
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      shootingStars.forEach(star => {
+        star.update();
+        star.draw();
+      });
+
+      requestAnimationFrame(animateCanvas);
+    }
+
+    window.onload = function() {
+      animateCanvas();
+    };
+  </script>
+</body>
+</html>
